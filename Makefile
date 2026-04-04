@@ -1,6 +1,12 @@
-# Rime configuration sync (Ansible)
+# rime-config — Rime configuration sync
 #
-# Override RIME_DIR for non-macOS platforms:
+# Usage:
+#   make install   push config -> ~/Library/Rime/ (with backup)
+#   make pull      pull live config -> repo (with backup)
+#   make diff      dry-run diff
+#   make deploy    install + redeploy Squirrel
+#
+# Other platforms:
 #   make install RIME_DIR=~/.config/ibus/rime
 
 RIME_DIR := ~/Library/Rime
