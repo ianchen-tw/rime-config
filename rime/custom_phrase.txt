@@ -1,0 +1,10 @@
+# Rime table
+# coding: utf-8
+#
+# 自定義短語。格式與鍵盤對照表見 notes/rime.md
+# 欄位: 詞<TAB>鍵盤碼<TAB>權重
+#
+# ㄕㄉㄧ 簡拼
+設定	g2u	1
+# ㄓㄜㄧㄒㄝˉ 介母錯位
+這些	5kuv, 	1

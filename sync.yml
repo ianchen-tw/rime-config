@@ -1,0 +1,28 @@
+- hosts: all
+  connection: local
+  gather_facts: false
+  vars:
+    rime_dir: "{{ rime_dir | default('~/Library/Rime') }}"
+    mode: install
+  tasks:
+    - name: Install config (repo -> live)
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/rime/"
+        dest: "{{ rime_dir }}/"
+        backup: yes
+      when: mode == "install"
+
+    - name: Find tracked config files
+      ansible.builtin.find:
+        paths: "{{ playbook_dir }}/rime"
+        file_type: file
+      register: repo_files
+      when: mode == "pull"
+
+    - name: Pull config (live -> repo) with backup
+      ansible.builtin.copy:
+        src: "{{ rime_dir }}/{{ item.path | basename }}"
+        dest: "{{ item.path }}"
+        backup: yes
+      loop: "{{ repo_files.files | default([]) }}"
+      when: mode == "pull"

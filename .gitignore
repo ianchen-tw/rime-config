@@ -1,0 +1,6 @@
+build/
+*.userdb/
+*.userdb.txt
+*~
+sync/
+.DS_Store

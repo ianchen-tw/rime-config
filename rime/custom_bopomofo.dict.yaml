@@ -1,0 +1,18 @@
+# Rime dictionary
+# encoding: utf-8
+#
+# 補充字典：匯入 terra_pinyin 並加入自訂讀音。
+# 由 bopomofo_tw.custom.yaml 指定為 translator/dictionary 使用。
+
+---
+name: custom_bopomofo
+version: "2025.04.04"
+sort: by_weight
+use_preset_vocabulary: true
+max_phrase_length: 7
+min_phrase_weight: 100
+import_tables:
+  - terra_pinyin
+...
+
+嗎	ma1
