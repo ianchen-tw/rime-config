@@ -4,3 +4,4 @@ build/
 *~
 sync/
 .DS_Store
+.venv/

@@ -10,18 +10,24 @@
 #   make install RIME_DIR=~/.config/ibus/rime
 
 RIME_DIR := ~/Library/Rime
+UV ?= uv
+SQUIRREL := /Library/Input Methods/Squirrel.app/Contents/MacOS/Squirrel
 
 .PHONY: install deploy diff pull
 
 install:
-	ansible-playbook sync.yml -e "rime_dir=$(RIME_DIR)"
+	@$(UV) --version >/dev/null || { echo "install uv: https://docs.astral.sh/uv/"; exit 1; }
+	$(UV) run ansible-playbook sync.yml -e "rime_dir=$(RIME_DIR)"
 
 diff:
-	ansible-playbook sync.yml --check --diff -e "rime_dir=$(RIME_DIR)"
+	@$(UV) --version >/dev/null || { echo "install uv: https://docs.astral.sh/uv/"; exit 1; }
+	$(UV) run ansible-playbook sync.yml --check --diff -e "rime_dir=$(RIME_DIR)"
 
 pull:
-	ansible-playbook sync.yml -e "mode=pull rime_dir=$(RIME_DIR)"
+	@$(UV) --version >/dev/null || { echo "install uv: https://docs.astral.sh/uv/"; exit 1; }
+	$(UV) run ansible-playbook sync.yml -e "mode=pull rime_dir=$(RIME_DIR)"
 
 deploy: install
-	/Library/Input\ Methods/Squirrel.app/Contents/MacOS/Squirrel --reload
+	@test -x "$(SQUIRREL)" || { echo "Squirrel not found at $(SQUIRREL)"; echo "install: brew install --cask squirrel-app"; exit 1; }
+	"$(SQUIRREL)" --reload
 	@echo "Rime redeployed."
