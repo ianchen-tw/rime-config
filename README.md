@@ -24,3 +24,13 @@ make deploy    # install + redeploy Squirrel
 ```
 
 Linux: `make install RIME_DIR=~/.config/ibus/rime`
+
+## Personal phrase table
+
+Optional. Phrases live in [`github.com/ianchen-tw/rime-vocab`](https://github.com/ianchen-tw/rime-vocab).
+
+1. `make install` in that repo, so `~/Library/Rime/personal.dict.yaml` exists.
+2. `make deploy` here. Ansible copies `templates/bopomofo_tw.custom.personal.yaml` when that file exists, and `templates/bopomofo_tw.custom.default.yaml` otherwise.
+3. After removing the phrase table, run `make deploy` here again. A reload alone leaves the schema pointing at `personal`.
+
+Both templates set `translator/user_dict: terra_pinyin`. The phrase table must import `pronunciation` and `terra_pinyin`. `import_tables` is not recursive, so `pronunciation` alone does not include the terra character table.

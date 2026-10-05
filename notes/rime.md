@@ -60,7 +60,7 @@ Look up this table to convert 注音 to keyboard codes (derived from `bopomofo_t
 聲調: ˉ(一聲)=space  ˊ(二聲)=6  ˇ(三聲)=3  ˋ(四聲)=4  ˙(輕聲)=7
 ```
 
-## Supplementary dict: custom_bopomofo.dict.yaml
+## Reading table: pronunciation.dict.yaml
 
 Use this to add or override character readings (e.g. make 嗎 appear under ㄇㄚˉ).
 
@@ -68,7 +68,7 @@ Use this to add or override character readings (e.g. make 嗎 appear under ㄇ�
 
 ```
 ---
-name: custom_bopomofo
+name: pronunciation
 version: "2025.04.04"
 sort: by_weight
 use_preset_vocabulary: true
@@ -87,24 +87,40 @@ Tone digits: 1 = 一聲, 2 = 二聲, 3 = 三聲, 4 = 四聲, 5 = 輕聲.
 ### Required settings
 
 - **Keep `use_preset_vocabulary: true`**. `import_tables` imports only the code table, not the original dict header. Without this, all multi-character vocabulary is lost.
-- **Set `translator/user_dict: terra_pinyin`** in `bopomofo_tw.custom.yaml`. Otherwise Rime creates a new `custom_bopomofo.userdb` and all learned word frequencies reset to zero.
+- **Set `translator/user_dict: terra_pinyin`** in both schema templates. Otherwise Rime creates a new `pronunciation.userdb` or `personal.userdb` and all learned word frequencies reset to zero.
 
-`bopomofo_tw.custom.yaml`:
+### Schema templates
+
+Rime loads `bopomofo_tw.custom.yaml` by that filename. This repo keeps two sources under `templates/` and Ansible copies one of them to that filename.
+
+`templates/bopomofo_tw.custom.default.yaml`, used when `~/Library/Rime/personal.dict.yaml` is absent:
 
 ```yaml
 patch:
-  translator/dictionary: custom_bopomofo
+  translator/dictionary: pronunciation
   translator/user_dict: terra_pinyin
 ```
 
-### Supplementary dict vs custom_phrase.txt
+`templates/bopomofo_tw.custom.personal.yaml`, used when that phrase table is present:
 
-Add readings via the supplementary dict; use `custom_phrase.txt` for abbreviations and typo corrections.
+```yaml
+patch:
+  translator/dictionary: personal
+  translator/user_dict: terra_pinyin
+```
+
+`make pull` does not copy the deployed patch back over these templates.
+
+The personal phrase table is [`github.com/ianchen-tw/rime-vocab`](https://github.com/ianchen-tw/rime-vocab). Its `import_tables` lists `pronunciation` and `terra_pinyin`. `import_tables` is not recursive and does not copy `use_preset_vocabulary`; the personal dict sets that flag itself and must import `terra_pinyin` directly. `pronunciation` contributes reading overrides such as `嗎`.
+
+### Reading table vs custom_phrase.txt
+
+Add readings via `pronunciation.dict.yaml`; use `custom_phrase.txt` for abbreviations and typo corrections. The abbreviation filename is fixed by the schema (`user_dict: custom_phrase`).
 
 Single-syllable first-tone entries in `custom_phrase.txt` require space as the final
 keyboard code character, but `fluency_editor`'s `space: toggle_selection` intercepts
 the space first, selecting the candidate before it updates. Multi-syllable entries
-are unaffected (space falls in the middle). The supplementary dict has no such limitation.
+are unaffected (space falls in the middle). `pronunciation.dict.yaml` has no such limitation.
 
 ## Logs
 

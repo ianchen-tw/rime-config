@@ -1,0 +1,19 @@
+# Rime dictionary
+# encoding: utf-8
+#
+# 公開讀音表：匯入 terra_pinyin，再加上讀音覆寫。
+# 預設模板把 translator/dictionary 指到 pronunciation。
+# 個人詞庫 personal 必須 import_tables 這份檔，覆寫才不會在個人模式消失。
+
+---
+name: pronunciation
+version: "2025.04.04"
+sort: by_weight
+use_preset_vocabulary: true
+max_phrase_length: 7
+min_phrase_weight: 100
+import_tables:
+  - terra_pinyin
+...
+
+嗎	ma1

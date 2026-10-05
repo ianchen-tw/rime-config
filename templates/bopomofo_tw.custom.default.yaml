@@ -1,3 +1,3 @@
 patch:
-  translator/dictionary: custom_bopomofo
+  translator/dictionary: pronunciation
   translator/user_dict: terra_pinyin

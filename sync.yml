@@ -12,6 +12,25 @@
         backup: yes
       when: mode == "install"
 
+    - name: Check for personal phrase table
+      ansible.builtin.stat:
+        path: "{{ rime_dir }}/personal.dict.yaml"
+      register: personal_dict
+      when: mode == "install"
+
+    - name: Install bopomofo_tw patch
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/templates/bopomofo_tw.custom.{{ 'personal' if personal_dict.stat.exists else 'default' }}.yaml"
+        dest: "{{ rime_dir }}/bopomofo_tw.custom.yaml"
+        backup: yes
+      when: mode == "install"
+
+    - name: Remove retired custom_bopomofo dict
+      ansible.builtin.file:
+        path: "{{ rime_dir }}/custom_bopomofo.dict.yaml"
+        state: absent
+      when: mode == "install"
+
     - name: Find tracked config files
       ansible.builtin.find:
         paths: "{{ playbook_dir }}/rime"
